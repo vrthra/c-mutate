@@ -21,52 +21,43 @@
 #   08/22/2011 by Chaoqiang Zhang
 #   Randomly generate some mutants using user specified number.
 
-if test $# = 2
+if test $# = 1
 then
   SOURCE=$1
-  NUMMUTANTS=$2
 else
-  echo Usage: $0 source-filename num-of-mutants
-  #exit 1
+  echo Usage: $0 source-filename
+  exit 1
 fi
 
-DESCS=${SOURCE}.MutantDescs.txt
+name=$(basename $SOURCE)
+myname=build/$name/
+mkdir -p $myname
+mkdir -p $myname/mutants
 
-echo Current directory: `pwd`
-echo Source file: $SOURCE
-
+DESCS=$myname/MutantDescs.txt
 echo Generating mutant descriptions into file ${DESCS}...
 # Assumes that executable "descmutants" has been made and is accessible.
-./descmutants <$SOURCE >$DESCS
-echo done.
-NumMutants=$NUMMUTANTS
+./bin/descmutants <$SOURCE >$DESCS
 Total=`wc -l < $DESCS`
-echo Number of mutant descriptions generated:  $NumMutants
+echo Number of mutant descriptions generated:  $Total
 
 echo Generating mutants of ${SOURCE}...
 Mutant=0
 # Starting with code 100001 because that makes it much easier for
 # shell scripts that are going to step through all mutants.
 MutantCode=100000
-Idx=0
-while test $Idx -lt $Total
+
+for Mutant in $(seq 1 $Total)
 do
-  Idx=`expr $Idx + 1`
-  Mutant=$Idx #`expr $[ ( $RANDOM % ($Total) ) ]`
-  echo $Mutant
-  Mutant=`expr $Mutant + 1`
-  MutantCode=`expr $MutantCode + 1`
+  mutated_line=$(sed -ne "$Mutant s/:.*//p" < $DESCS)
+  LineNoM1=`expr $mutated_line - 1`
+  LineNoP1=`expr $mutated_line + 1`
+  mymutant=build/$name/mutants/${Mutant}_${name}
 
-  LineNo=`tail -n +$Mutant $DESCS | head -1 | cut -f 1 -d:`
-  LineNoM1=`expr $LineNo - 1`
-  LineNoP1=`expr $LineNo + 1`
-  # echo LineNoM1 $LineNoM1 LineNoP1 $LineNoP1
-  MutantFilename=mutant${MutantCode}_${SOURCE}
-
-  echo Generating mutant source file $MutantFilename with mutated line $LineNo
-  head -$LineNoM1 $SOURCE >$MutantFilename
-  tail -n +$Mutant $DESCS | head -1 | cut -f 2- -d: >>$MutantFilename
-  tail -n +$LineNoP1 $SOURCE >>$MutantFilename
+  echo Generating mutant source file $mymutant with mutated line $mutated_line
+  sed -ne "1,$LineNoM1 p" < $SOURCE >$mymutant
+  sed -ne "$Mutant s/^[^:]*://p" < $DESCS >>$mymutant
+  sed -ne "$LineNoP1,$ p" < $SOURCE >>$mymutant
 done
 
 echo Number of mutants generated in `pwd`: $Mutant
