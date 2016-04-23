@@ -6,7 +6,7 @@ bin/descmutants: src/descmutants.pl
 P=wc.c
 G=build/wc.c/mutants.txt
 gen: bin/descmutants $(G)
-	./bin/gen.sh programs/$(P)
+	./bin/gen.rb programs/$(P)
 
 
 build/%/mutants.txt: bin/descmutants
