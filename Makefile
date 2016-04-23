@@ -4,7 +4,7 @@ bin/descmutants: src/descmutants.pl
 	swipl --goal=describe_mutants --stand_alone=true --local=32768 -o ./bin/descmutants -c src/descmutants.pl
 
 P=wc.c
-G=build/wc.c/mutants.txt
+G=build/$(P)/mutants.txt
 gen: bin/descmutants $(G)
 	./bin/gen.rb programs/$(P)
 
