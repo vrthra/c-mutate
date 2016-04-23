@@ -23,7 +23,7 @@ To compile:
 - Type `make` and you should get an executable called "bin/descmutants".
 
 To generate mutants:
-- Type `make gen P=<sourcefile>", where <sourcefile> is
+- Type `make gen P=<sourcefile>', where <sourcefile> is
   the name of your program (in a C-like language) that you want
   to generate mutants for.
 
