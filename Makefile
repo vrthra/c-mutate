@@ -8,6 +8,8 @@ G=build/$(P)/mutants.txt
 gen: bin/descmutants $(G)
 	./bin/gen.rb programs/$(P)
 
+descr: build/$(P)/mutants.txt
+	@echo done
 
 build/%/mutants.txt: bin/descmutants
 	mkdir -p build/$*
