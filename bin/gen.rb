@@ -20,9 +20,9 @@ def mutate(mut_line_no, mut_line)
 end
 
 File.readlines(descs).each.with_index(1) do |mutated_line_descr, idx|
-  mymutant = "build/#{$name}/mutants/#{idx}_#{$name}"
   case mutated_line_descr
   when /^([^:]*):(.*)/
+    mymutant = "build/#{$name}/mutants/#{idx}_#{$1.strip}_#{$name}"
     File.open(mymutant, 'w+') do |f|
       f.puts mutate($1.to_i, $2)
     end
