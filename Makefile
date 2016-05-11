@@ -17,6 +17,9 @@ build/%/mutants.txt: bin/descmutants
 
 gcc=gcc -fprofile-arcs -ftest-coverage
 
+parsegcov:
+	gcovr -x | grep hits
+
 clobber:
 	rm -f bin/descmutants
 	rm -rf build
