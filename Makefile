@@ -1,7 +1,7 @@
 
 bin/descmutants: src/descmutants.pl
 	mkdir -p bin
-	swipl --goal=describe_mutants --stand_alone=true --local=32768 -o ./bin/descmutants -c src/descmutants.pl
+	swipl -G100g -T20g -L2g --goal=describe_mutants --stand_alone=true -o ./bin/descmutants -c src/descmutants.pl
 
 P=wc.c
 G=build/$(P)/mutants.txt
