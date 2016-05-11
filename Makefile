@@ -15,6 +15,7 @@ build/%/mutants.txt: bin/descmutants
 	mkdir -p build/$*
 	./bin/descmutants < programs/$* > $@
 
+gcc=gcc -fprofile-arcs -ftest-coverage
 
 clobber:
 	rm -f bin/descmutants
